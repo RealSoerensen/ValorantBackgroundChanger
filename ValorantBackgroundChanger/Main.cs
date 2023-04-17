@@ -126,6 +126,7 @@ namespace ValorantBackgroundChanger
             if (newVideoPath == null) return;
             File.WriteAllText(replacementVideoSrcFilePath, newVideoPath);
             MessageBox.Show("Saved!");
+            currentVideoPath = newVideoPath;
             DisplayCurrentVideo();
         }
 
