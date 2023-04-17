@@ -21,9 +21,9 @@ namespace ValorantBackgroundChanger
             CreateValoSrcFolderTxt();
             CheckPathFile();
             CreateReplacementVideoSrcTxt();
+            InitializeComponent();
             CheckVideoPath();
             DisplayCurrentVideo();
-            InitializeComponent();
             currentVideoWMP.uiMode = "none";
             currentVideoWMP.settings.setMode("loop", true);
             currentVideoWMP.settings.volume = 0;
@@ -97,19 +97,8 @@ namespace ValorantBackgroundChanger
 
         private void CheckVideoPath()
         {
-            string videoPath = null;
-            using (StreamReader sr = File.OpenText(videoSrc))
-            {
-                string s;
-                while ((s = sr.ReadLine()) != null)
-                {
-                    videoPath = s;
-                }
-            }
-            if (videoPath == null) return;
-            newVideoPath = videoPath;
-            newVideoPathTf.Text = videoPath;
-            currentVideoPath = videoPath;
+            currentVideoPath = GetFilePath(videoSrc);
+            newVideoPathTf.Text = currentVideoPath;
         }
 
         private void DisplayCurrentVideo()
