@@ -7,34 +7,38 @@ namespace ValorantBackgroundChanger
 {
     public partial class SetLocationForm : Form
     {
-        private static readonly string root = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"ValorantBackGroundChanger\");
-        private readonly string textFile = root + "ValorantSrcFolder.txt";
-        
+        private readonly string valorantSrcFilePath;
+
         public SetLocationForm()
         {
+            var appDataFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ValorantBackGroundChanger");
+            valorantSrcFilePath = Path.Combine(appDataFolderPath, "ValorantSrcFolder.txt");
             InitializeComponent();
         }
 
         private void folderBrowserBtn_Click(object sender, EventArgs e)
         {
-            FolderBrowserDialog folderBrowser = new FolderBrowserDialog();
-            folderBrowser.ShowDialog();
-            srcTf.Text = folderBrowser.SelectedPath;
+            using (var folderBrowser = new FolderBrowserDialog())
+            {
+                if (folderBrowser.ShowDialog() == DialogResult.OK)
+                {
+                    srcTf.Text = folderBrowser.SelectedPath;
+                }
+            }
         }
 
         private void setLocationbtn_Click(object sender, EventArgs e)
-        { 
-            // Open the stream and write to it.
-            using (FileStream fs = File.OpenWrite(textFile))
+        {
+            try
             {
-                string finalText = srcTf.Text + @"\\live\\ShooterGame\\Content\\Movies\\Menu";
-                Byte[] info = new UTF8Encoding(true).GetBytes(finalText);
-
-                // Add some information to the file.
-                fs.Write(info, 0, info.Length);
-
+                string finalText = Path.Combine(srcTf.Text, "live", "ShooterGame", "Content", "Movies", "Menu");
+                File.WriteAllText(valorantSrcFilePath, finalText);
+                Hide();
             }
-            Hide();
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}");
+            }
         }
     }
 }
