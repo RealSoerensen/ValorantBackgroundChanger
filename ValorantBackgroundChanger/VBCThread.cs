@@ -8,9 +8,15 @@ namespace ValorantBackgroundChanger
 {
     public class VBCThread
     {
-        private static readonly string root = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"ValorantBackGroundChanger\");
-        private readonly string valorantSrc = root + "ValorantSrcFolder.txt";
-        private readonly string videoSrc = root + "ReplacementVideoSrc.txt";
+        private readonly string valorantSrcFilePath;
+        private readonly string replacementVideoSrcFilePath;
+
+        public VBCThread()
+        {
+            var appDataFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ValorantBackGroundChanger");
+            valorantSrcFilePath = Path.Combine(appDataFolderPath, "ValorantSrcFolder.txt");
+            replacementVideoSrcFilePath = Path.Combine(appDataFolderPath, "ReplacementVideoSrc.txt");
+        }
 
         public void Start()
         {
@@ -26,23 +32,23 @@ namespace ValorantBackgroundChanger
 
         private string GetFilePath(string path)
         {
-            string valoPath = null;
-            using (StreamReader sr = File.OpenText(path))
+            if (File.Exists(path))
             {
-                string s;
-                while ((s = sr.ReadLine()) != null)
-                {
-                    valoPath = s;
-                }
+                return File.ReadAllText(path);
             }
-            return valoPath;
+            return null;
         }
-
 
         private void ReplaceBackground()
         {
-            string valoPath = GetFilePath(valorantSrc);
-            string videoPath = GetFilePath(videoSrc);
+            string valoPath = GetFilePath(valorantSrcFilePath);
+            string videoPath = GetFilePath(replacementVideoSrcFilePath);
+
+            if (string.IsNullOrEmpty(valoPath) || string.IsNullOrEmpty(videoPath))
+            {
+                return;
+            }
+
             try
             {
                 string[] files = Directory.GetFiles(valoPath);
