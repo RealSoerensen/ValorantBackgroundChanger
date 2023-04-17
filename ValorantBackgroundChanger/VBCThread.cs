@@ -7,42 +7,39 @@ namespace ValorantBackgroundChanger
 {
     public class VBCThread
     {
-        private readonly string valorantSrcFilePath;
-        private readonly string replacementVideoSrcFilePath;
+        private readonly Settings settings = new Settings();
+        private string valoPath;
+        private string videoPath;
 
         public VBCThread()
         {
-            var appDataFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ValorantBackGroundChanger");
-            valorantSrcFilePath = Path.Combine(appDataFolderPath, "ValorantSrcFolder.txt");
-            replacementVideoSrcFilePath = Path.Combine(appDataFolderPath, "ReplacementVideoSrc.txt");
+            setSettings();
+        }
+
+        private void setSettings()
+        {
+            settings.ReadSettings();
+            valoPath = settings.ValoSrcPath;
+            videoPath = settings.ReplacementVideoSrcPath;
         }
 
         public void Start()
         {
-            while (true)
+            bool isBackgroundChanged = false;
+            while (!isBackgroundChanged)
             {
+                setSettings();
+                ReplaceBackground();
                 if (Process.GetProcessesByName("VALORANT-Win64-Shipping").Length > 0)
                 {
-                    ReplaceBackground();
+                    isBackgroundChanged = checkIfBackgroundChanged();
                 }
                 Thread.Sleep(1000);
             }
         }
 
-        private string GetFilePath(string path)
-        {
-            if (File.Exists(path))
-            {
-                return File.ReadAllText(path);
-            }
-            return null;
-        }
-
         private void ReplaceBackground()
         {
-            string valoPath = GetFilePath(valorantSrcFilePath);
-            string videoPath = GetFilePath(replacementVideoSrcFilePath);
-
             if (string.IsNullOrEmpty(valoPath) || string.IsNullOrEmpty(videoPath))
             {
                 return;
@@ -65,6 +62,35 @@ namespace ValorantBackgroundChanger
                 Thread.Sleep(100);
                 ReplaceBackground();
             }
+        }
+
+        private bool checkIfBackgroundChanged()
+        {
+            if (string.IsNullOrEmpty(valoPath) || string.IsNullOrEmpty(videoPath))
+            {
+                return false;
+            }
+            FileInfo videoFileInfo = new FileInfo(videoPath);
+            int videoFileSize = (int)videoFileInfo.Length;
+            int valoVideoFileSize = 0;
+            try
+            {
+                string[] files = Directory.GetFiles(valoPath);
+                foreach (string file in files)
+                {
+                    if (file.Contains("HomepageEp"))
+                    {
+                        FileInfo valoVideoFileInfo = new FileInfo(file);
+                        valoVideoFileSize = (int)valoVideoFileInfo.Length;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                Thread.Sleep(100);
+                checkIfBackgroundChanged();
+            }
+            return (videoFileSize == valoVideoFileSize);
         }
     }
 }

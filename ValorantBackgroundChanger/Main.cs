@@ -1,6 +1,4 @@
 ﻿using System;
-using System.IO;
-using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -8,35 +6,25 @@ namespace ValorantBackgroundChanger
 {
     public partial class Main : Form
     {
-        private readonly string appDataFolderPath;
-        private readonly string valorantSrcFilePath;
-        private readonly string replacementVideoSrcFilePath;
-        private string currentVideoPath;
-        private string newVideoPath;
+        private readonly Settings settings = new Settings();
 
-        public Main()
+        public Main(Settings settings)
         {
-            appDataFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ValorantBackGroundChanger");
-            valorantSrcFilePath = Path.Combine(appDataFolderPath, "ValorantSrcFolder.txt");
-            replacementVideoSrcFilePath = Path.Combine(appDataFolderPath, "ReplacementVideoSrc.txt");
-
+            this.settings = settings;
             InitializeComponent();
             SetupVideoPlayer();
-            LoadSettings();
         }
 
-        private void LoadSettings()
-        {
-            CreateAppDataFolder();
-            CreateValoSrcFolderTxt();
-            CheckPathFile();
-            CreateReplacementVideoSrcTxt();
-            CheckVideoPath();
-        }
 
         private void Main_Load(object sender, EventArgs e)
         {
-            Thread t = new Thread(StartVBCThread);
+            CheckValoPath();
+            CheckVideoPath();
+            DisplayCurrentVideo();
+            Thread t = new Thread(StartVBCThread)
+            {
+                IsBackground = true
+            };
             t.Start();
         }
 
@@ -47,64 +35,21 @@ namespace ValorantBackgroundChanger
             currentVideoWMP.settings.volume = 0;
         }
 
-        private void CreateAppDataFolder()
+        private void CheckValoPath()
         {
-            if (!Directory.Exists(appDataFolderPath))
-            {
-                Directory.CreateDirectory(appDataFolderPath);
-            }
-        }
-
-        private void CreateValoSrcFolderTxt()
-        {
-            if (!File.Exists(valorantSrcFilePath))
-            {
-                File.WriteAllText(valorantSrcFilePath, "");
-            }
-        }
-
-        private void CheckPathFile()
-        {
-            string valoPath = GetFilePath(valorantSrcFilePath);
-            if (valoPath == null)
-            {
-                using (var setLocForm = new SetLocationForm())
-                {
-                    if (setLocForm.ShowDialog() == DialogResult.OK)
-                    {
-                        GetFilePath(valorantSrcFilePath);
-                    }
-                }
-            }
-        }
-
-        private void CreateReplacementVideoSrcTxt()
-        {
-            if (!File.Exists(replacementVideoSrcFilePath))
-            {
-                File.WriteAllText(replacementVideoSrcFilePath, "");
-            }
+            if (settings.ValoSrcPath.Length > 0) return;
+            Hide();
+            new SetLocationForm(settings).Show();
         }
 
         private void CheckVideoPath()
         {
-            currentVideoPath = GetFilePath(replacementVideoSrcFilePath);
-            newVideoPathTf.Text = currentVideoPath;
-            DisplayCurrentVideo();
-        }
-
-        private string GetFilePath(string path)
-        {
-            if (File.Exists(path))
-            {
-                return File.ReadAllText(path);
-            }
-            return null;
+            newVideoPathTf.Text = settings.ReplacementVideoSrcPath;
         }
 
         private void DisplayCurrentVideo()
         {
-            currentVideoWMP.URL = currentVideoPath;
+            currentVideoWMP.URL = settings.ReplacementVideoSrcPath;
         }
 
         private void fileExplorerBtn_Click(object sender, EventArgs e)
@@ -115,24 +60,29 @@ namespace ValorantBackgroundChanger
                 openFileDialog.Title = "Select a MP4 File";
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    newVideoPath = openFileDialog.FileName;
-                    newVideoPathTf.Text = newVideoPath;
+                    newVideoPathTf.Text = openFileDialog.FileName;
                 }
             }
         }
 
         private void saveBtn_Click(object sender, EventArgs e)
         {
+            string newVideoPath = newVideoPathTf.Text;
             if (newVideoPath == null) return;
-            File.WriteAllText(replacementVideoSrcFilePath, newVideoPath);
+            settings.ReplacementVideoSrcPath = newVideoPath;
+            settings.SaveSettings();
             MessageBox.Show("Saved!");
-            currentVideoPath = newVideoPath;
             DisplayCurrentVideo();
         }
 
         private void StartVBCThread()
         {
             new VBCThread().Start();
+        }
+
+        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new SettingForm(settings).Show();
         }
     }
 }
