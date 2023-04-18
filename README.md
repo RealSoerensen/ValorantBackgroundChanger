@@ -16,6 +16,8 @@ Background changer for Valorant. It changes the background of the main menu.
 2. Extract the zip file.
 3. Run the .exe file.
 
+["How to use"-video](https://youtu.be/xQaO8MXre3o)
+
 ## How to change the background
 
 1. Open the .exe file.
