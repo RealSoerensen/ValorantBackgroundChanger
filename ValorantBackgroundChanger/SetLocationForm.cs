@@ -50,10 +50,15 @@ namespace ValorantBackgroundChanger
 
         private void SetLocationForm_Load(object sender, EventArgs e)
         {
-            MessageBox.Show(
+            DialogResult result = MessageBox.Show(
                 "This program is not affiliated with Riot Games or VALORANT. VALORANT is a registered trademark of Riot Games, Inc. VALORANT © Riot Games, Inc. All rights reserved." +
-                "\nYou could be banned using this program as it changes the game files which is against TOS",
-                "Disclaimer", MessageBoxButtons.OK);
+                "\nYou could be banned using this program as it changes the game files which is against TOS." +
+                "\nPress 'OK' to proceed.",
+                "Disclaimer", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
+            if (result != DialogResult.OK)
+            {
+                Application.Exit();
+            }
         }
     }
 }
