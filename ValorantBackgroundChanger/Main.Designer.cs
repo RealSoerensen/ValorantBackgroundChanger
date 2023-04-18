@@ -36,12 +36,13 @@
             this.fileExplorerBtn = new System.Windows.Forms.Button();
             this.saveBtn = new System.Windows.Forms.Button();
             this.mainMenu = new System.Windows.Forms.MenuStrip();
+            this.settingsToolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.sSsettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.dISCLAIMERToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.settingsToolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.restoreBtn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.currentVideoWMP)).BeginInit();
             this.mainMenu.SuspendLayout();
             this.SuspendLayout();
@@ -92,7 +93,7 @@
             // 
             // saveBtn
             // 
-            this.saveBtn.Location = new System.Drawing.Point(12, 249);
+            this.saveBtn.Location = new System.Drawing.Point(203, 248);
             this.saveBtn.Name = "saveBtn";
             this.saveBtn.Size = new System.Drawing.Size(75, 23);
             this.saveBtn.TabIndex = 10;
@@ -109,6 +110,13 @@
             this.mainMenu.Size = new System.Drawing.Size(290, 24);
             this.mainMenu.TabIndex = 11;
             this.mainMenu.Text = "menuStrip1";
+            // 
+            // settingsToolStripMenuItem3
+            // 
+            this.settingsToolStripMenuItem3.Name = "settingsToolStripMenuItem3";
+            this.settingsToolStripMenuItem3.Size = new System.Drawing.Size(61, 20);
+            this.settingsToolStripMenuItem3.Text = "Settings";
+            this.settingsToolStripMenuItem3.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
             // 
             // sSsettingsToolStripMenuItem
             // 
@@ -136,18 +144,22 @@
             this.settingsToolStripMenuItem2.Size = new System.Drawing.Size(61, 20);
             this.settingsToolStripMenuItem2.Text = "Settings";
             // 
-            // settingsToolStripMenuItem3
+            // restoreBtn
             // 
-            this.settingsToolStripMenuItem3.Name = "settingsToolStripMenuItem3";
-            this.settingsToolStripMenuItem3.Size = new System.Drawing.Size(61, 20);
-            this.settingsToolStripMenuItem3.Text = "Settings";
-            this.settingsToolStripMenuItem3.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
+            this.restoreBtn.Location = new System.Drawing.Point(12, 248);
+            this.restoreBtn.Name = "restoreBtn";
+            this.restoreBtn.Size = new System.Drawing.Size(93, 23);
+            this.restoreBtn.TabIndex = 12;
+            this.restoreBtn.Text = "Restore original";
+            this.restoreBtn.UseVisualStyleBackColor = true;
+            this.restoreBtn.Click += new System.EventHandler(this.restoreBtn_Click);
             // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(290, 281);
+            this.Controls.Add(this.restoreBtn);
             this.Controls.Add(this.saveBtn);
             this.Controls.Add(this.fileExplorerBtn);
             this.Controls.Add(this.label2);
@@ -183,6 +195,7 @@
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem3;
+        private System.Windows.Forms.Button restoreBtn;
     }
 }
 

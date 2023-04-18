@@ -38,7 +38,7 @@ namespace ValorantBackgroundChanger
             }
         }
 
-        private void ReplaceBackground()
+        public void RestoreBackground()
         {
             if (string.IsNullOrEmpty(valoPath) || string.IsNullOrEmpty(videoPath))
             {
@@ -52,7 +52,34 @@ namespace ValorantBackgroundChanger
                 {
                     if (file.Contains("HomepageEp"))
                     {
-                        File.Copy(videoPath, file, true);
+                        File.Copy(file, videoPath, true);
+                        break;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                Thread.Sleep(100);
+                RestoreBackground();
+            }
+        }
+
+
+        private void ReplaceBackground()
+        {
+            if (string.IsNullOrEmpty(valoPath))
+            {
+                return;
+            }
+
+            try
+            {
+                string[] files = Directory.GetFiles(valoPath);
+                foreach (string file in files)
+                {
+                    if (file.Contains("HomepageEp"))
+                    {
+                        File.Delete(file);
                         break;
                     }
                 }

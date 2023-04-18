@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -83,6 +84,16 @@ namespace ValorantBackgroundChanger
         private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new SettingForm(settings).Show();
+        }
+
+        private void restoreBtn_Click(object sender, EventArgs e)
+        {
+            if (Process.GetProcessesByName("VALORANT-Win64-Shipping").Length > 0)
+            {
+                MessageBox.Show("Please close VALORANT before restoring the background.");
+                return;
+            }
+            new VBCThread().RestoreBackground();
         }
     }
 }
