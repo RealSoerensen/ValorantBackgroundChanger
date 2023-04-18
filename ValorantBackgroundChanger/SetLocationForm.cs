@@ -8,12 +8,13 @@ namespace ValorantBackgroundChanger
 {
     public partial class SetLocationForm : Form
     {
-        private Settings settings = new Settings();
+        private readonly Settings settings = new Settings();
 
         public SetLocationForm(Settings settings)
         {
             settings.ReadSettings();
             InitializeComponent();
+            Icon = Properties.Resources.VBC;
         }
 
         private void folderBrowserBtn_Click(object sender, EventArgs e)

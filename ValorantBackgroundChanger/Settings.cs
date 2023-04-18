@@ -5,20 +5,24 @@ namespace ValorantBackgroundChanger
 {
     public class Settings
     {
-        private string valoSrcPath;
-        private string replacementVideoSrcPath;
-        private bool startWithWindows;
-
         public Settings()
         {
-            valoSrcPath = "";
-            replacementVideoSrcPath = "";
-            startWithWindows = false;
+            ValoSrcPath = "";
+            ReplacementVideoSrcPath = "";
+            StartWithWindows = false;
+            StartMinimized = false;
+            CloseMinimizes = false;
         }
 
-        public string ValoSrcPath { get => valoSrcPath; set => valoSrcPath = value; }
-        public string ReplacementVideoSrcPath { get => replacementVideoSrcPath; set => replacementVideoSrcPath = value; }
-        public bool StartWithWindows { get => startWithWindows; set => startWithWindows = value; }
+        public string ValoSrcPath { get; set; }
+
+        public string ReplacementVideoSrcPath { get; set; }
+
+        public bool StartWithWindows { get; set; }
+
+        public bool StartMinimized { get; set; }
+
+        public bool CloseMinimizes { get; set; }
 
         public void ReadSettings()
         {
@@ -26,9 +30,11 @@ namespace ValorantBackgroundChanger
             {
                 var json = r.ReadToEnd();
                 var settings = JsonConvert.DeserializeObject<Settings>(json);
-                this.valoSrcPath = settings.ValoSrcPath;
-                this.replacementVideoSrcPath = settings.ReplacementVideoSrcPath;
-                this.startWithWindows = settings.StartWithWindows;
+                this.ValoSrcPath = settings.ValoSrcPath;
+                this.ReplacementVideoSrcPath = settings.ReplacementVideoSrcPath;
+                this.StartWithWindows = settings.StartWithWindows;
+                this.StartMinimized = settings.StartMinimized;
+                this.CloseMinimizes = settings.CloseMinimizes;
             }
         }
 

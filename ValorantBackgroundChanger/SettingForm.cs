@@ -1,28 +1,25 @@
-﻿using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 using System.Windows.Forms;
+using IWshRuntimeLibrary;
+using File = System.IO.File;
 
 namespace ValorantBackgroundChanger
 {
     public partial class SettingForm : Form
     {
-        private Settings settings = new Settings();
-        RegistryKey rkApp = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+        private readonly Settings settings;
+        private WshShell wshShell = new WshShell();
+        private IWshShortcut shortcut;
+        private static string startUpFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.Startup);
 
         public SettingForm(Settings settings)
         {
             this.settings = settings;
-            // The value doesn't exist, the application is not set to run at startup
-            settings.StartWithWindows = (rkApp.GetValue("ValorantBackgroundChanger") != null);
             InitializeComponent();
+            Icon = Properties.Resources.VBC;
             toggleStartUp.Checked = settings.StartWithWindows;
+            toggleStartMinimized.Checked = settings.StartMinimized;
+            toggleCloseMinimizes.Checked = settings.CloseMinimizes;
 
         }
 
@@ -30,14 +27,23 @@ namespace ValorantBackgroundChanger
         {
             if (toggleStartUp.Checked)
             {
-                // Add the value in the registry so that the application runs at startup
-                rkApp.SetValue("ValorantBackgroundChanger", Application.ExecutablePath);
+                // Create the shortcut
+                shortcut =
+                    (IWshShortcut) wshShell.CreateShortcut(
+                        startUpFolderPath + "\\" + Application.ProductName + ".lnk"
+                        );
+
+                shortcut.TargetPath = Application.ExecutablePath;
+                shortcut.WorkingDirectory = Application.StartupPath;
+                shortcut.Description = "Launch My Application";
+                shortcut.IconLocation = Application.StartupPath + @"\resource\VBC.ico";
+                shortcut.Save();
                 settings.StartWithWindows = true;
             }
             else
             {
-                // Remove the value from the registry so that the application doesn't start
-                rkApp.DeleteValue("ValorantBackgroundChanger", false);
+                if (File.Exists(startUpFolderPath + "\\" + Application.ProductName + ".lnk"))
+                    File.Delete(startUpFolderPath + "\\" + Application.ProductName + ".lnk");
                 settings.StartWithWindows = false;
             }
             settings.SaveSettings();
@@ -47,6 +53,18 @@ namespace ValorantBackgroundChanger
         {
             new Main(settings).Show();
             Hide();
+        }
+
+        private void toggleStartMinimized_CheckedChanged(object sender, EventArgs e)
+        {
+            settings.StartMinimized = toggleStartMinimized.Checked;
+            settings.SaveSettings();
+        }
+
+        private void toggleCloseMinimizes_CheckedChanged(object sender, EventArgs e)
+        {
+            settings.CloseMinimizes = toggleCloseMinimizes.Checked;
+            settings.SaveSettings();
         }
     }
 }

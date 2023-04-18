@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Security;
 using System.Threading;
 
 namespace ValorantBackgroundChanger
@@ -18,9 +19,18 @@ namespace ValorantBackgroundChanger
 
         private void setSettings()
         {
-            settings.ReadSettings();
-            valoPath = settings.ValoSrcPath;
-            videoPath = settings.ReplacementVideoSrcPath;
+            try
+            {
+                settings.ReadSettings();
+                valoPath = settings.ValoSrcPath;
+                videoPath = settings.ReplacementVideoSrcPath;
+            }
+            catch
+            {
+                Thread.Sleep(100);
+                setSettings();
+            }
+
         }
 
         public void Start()
@@ -34,11 +44,12 @@ namespace ValorantBackgroundChanger
                 {
                     isBackgroundChanged = checkIfBackgroundChanged();
                 }
-                Thread.Sleep(1000);
+                Thread.Sleep(5000);
             }
         }
 
-        public void RestoreBackground()
+
+        private void ReplaceBackground()
         {
             if (string.IsNullOrEmpty(valoPath) || string.IsNullOrEmpty(videoPath))
             {
@@ -48,38 +59,17 @@ namespace ValorantBackgroundChanger
             try
             {
                 string[] files = Directory.GetFiles(valoPath);
+                bool isOriginalSaved = isBackedUp();
                 foreach (string file in files)
                 {
-                    if (file.Contains("HomepageEp"))
+                    if (file.Contains("HomepageEp") && !file.EndsWith(".bak"))
                     {
-                        File.Copy(file, videoPath, true);
-                        break;
-                    }
-                }
-            }
-            catch (Exception)
-            {
-                Thread.Sleep(100);
-                RestoreBackground();
-            }
-        }
-
-
-        private void ReplaceBackground()
-        {
-            if (string.IsNullOrEmpty(valoPath))
-            {
-                return;
-            }
-
-            try
-            {
-                string[] files = Directory.GetFiles(valoPath);
-                foreach (string file in files)
-                {
-                    if (file.Contains("HomepageEp"))
-                    {
-                        File.Delete(file);
+                        if (!isOriginalSaved)
+                        {
+                            string backup = file + ".bak";
+                            File.Copy(file, backup, true);
+                        }
+                        File.Copy(videoPath, file, true);
                         break;
                     }
                 }
@@ -89,6 +79,19 @@ namespace ValorantBackgroundChanger
                 Thread.Sleep(100);
                 ReplaceBackground();
             }
+        }
+
+        private bool isBackedUp()
+        {
+            string[] files = Directory.GetFiles(valoPath);
+            foreach (string file in files)
+            {
+                if (file.EndsWith(".bak"))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private bool checkIfBackgroundChanged()

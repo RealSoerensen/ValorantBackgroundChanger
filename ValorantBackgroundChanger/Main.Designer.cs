@@ -1,4 +1,8 @@
-﻿namespace ValorantBackgroundChanger
+﻿using System;
+using System.Drawing;
+using System.Windows.Forms;
+
+namespace ValorantBackgroundChanger
 {
     partial class Main
     {
@@ -28,23 +32,20 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.label1 = new System.Windows.Forms.Label();
             this.newVideoPathTf = new System.Windows.Forms.TextBox();
-            this.currentVideoWMP = new AxWMPLib.AxWindowsMediaPlayer();
             this.label2 = new System.Windows.Forms.Label();
             this.fileExplorerBtn = new System.Windows.Forms.Button();
             this.saveBtn = new System.Windows.Forms.Button();
             this.mainMenu = new System.Windows.Forms.MenuStrip();
-            this.settingsToolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
-            this.sSsettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.settingsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.dISCLAIMERToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.settingsToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.restoreBtn = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.currentVideoWMP)).BeginInit();
+            this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
+            this.currentVideoWMP = new AxWMPLib.AxWindowsMediaPlayer();
             this.mainMenu.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.currentVideoWMP)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -62,15 +63,6 @@
             this.newVideoPathTf.Name = "newVideoPathTf";
             this.newVideoPathTf.Size = new System.Drawing.Size(229, 20);
             this.newVideoPathTf.TabIndex = 6;
-            // 
-            // currentVideoWMP
-            // 
-            this.currentVideoWMP.Enabled = true;
-            this.currentVideoWMP.Location = new System.Drawing.Point(12, 44);
-            this.currentVideoWMP.Name = "currentVideoWMP";
-            this.currentVideoWMP.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("currentVideoWMP.OcxState")));
-            this.currentVideoWMP.Size = new System.Drawing.Size(254, 143);
-            this.currentVideoWMP.TabIndex = 7;
             // 
             // label2
             // 
@@ -104,45 +96,19 @@
             // mainMenu
             // 
             this.mainMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.settingsToolStripMenuItem3});
+            this.settingsToolStripMenuItem});
             this.mainMenu.Location = new System.Drawing.Point(0, 0);
             this.mainMenu.Name = "mainMenu";
             this.mainMenu.Size = new System.Drawing.Size(290, 24);
             this.mainMenu.TabIndex = 11;
             this.mainMenu.Text = "menuStrip1";
             // 
-            // settingsToolStripMenuItem3
-            // 
-            this.settingsToolStripMenuItem3.Name = "settingsToolStripMenuItem3";
-            this.settingsToolStripMenuItem3.Size = new System.Drawing.Size(61, 20);
-            this.settingsToolStripMenuItem3.Text = "Settings";
-            this.settingsToolStripMenuItem3.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
-            // 
-            // sSsettingsToolStripMenuItem
-            // 
-            this.sSsettingsToolStripMenuItem.Name = "sSsettingsToolStripMenuItem";
-            this.sSsettingsToolStripMenuItem.Size = new System.Drawing.Size(12, 20);
-            // 
-            // settingsToolStripMenuItem1
-            // 
-            this.settingsToolStripMenuItem1.Name = "settingsToolStripMenuItem1";
-            this.settingsToolStripMenuItem1.Size = new System.Drawing.Size(12, 20);
-            // 
-            // dISCLAIMERToolStripMenuItem
-            // 
-            this.dISCLAIMERToolStripMenuItem.Name = "dISCLAIMERToolStripMenuItem";
-            this.dISCLAIMERToolStripMenuItem.Size = new System.Drawing.Size(32, 19);
-            // 
             // settingsToolStripMenuItem
             // 
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(32, 19);
-            // 
-            // settingsToolStripMenuItem2
-            // 
-            this.settingsToolStripMenuItem2.Name = "settingsToolStripMenuItem2";
-            this.settingsToolStripMenuItem2.Size = new System.Drawing.Size(61, 20);
-            this.settingsToolStripMenuItem2.Text = "Settings";
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
+            this.settingsToolStripMenuItem.Text = "Settings";
+            this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
             // 
             // restoreBtn
             // 
@@ -153,6 +119,26 @@
             this.restoreBtn.Text = "Restore original";
             this.restoreBtn.UseVisualStyleBackColor = true;
             this.restoreBtn.Click += new System.EventHandler(this.restoreBtn_Click);
+            // 
+            // notifyIcon
+            // 
+            this.notifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon.Icon")));
+            this.notifyIcon.Text = "Valorant Background Changer";
+            ContextMenu contextMenu1 = new ContextMenu();
+            contextMenu1.MenuItems.Add("Restore original", new EventHandler(restoreBtn_Click));
+            contextMenu1.MenuItems.Add("Settings", new EventHandler(settingsToolStripMenuItem_Click));
+            contextMenu1.MenuItems.Add("Exit", new EventHandler(exitToolStripMenuItem_Click));
+            this.notifyIcon.ContextMenu = contextMenu1;
+            this.notifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon_MouseDoubleClick);
+            // 
+            // currentVideoWMP
+            // 
+            this.currentVideoWMP.Enabled = true;
+            this.currentVideoWMP.Location = new System.Drawing.Point(12, 44);
+            this.currentVideoWMP.Name = "currentVideoWMP";
+            this.currentVideoWMP.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("currentVideoWMP.OcxState")));
+            this.currentVideoWMP.Size = new System.Drawing.Size(254, 143);
+            this.currentVideoWMP.TabIndex = 7;
             // 
             // Main
             // 
@@ -167,14 +153,18 @@
             this.Controls.Add(this.newVideoPathTf);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.mainMenu);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.HelpButton = true;
             this.MainMenuStrip = this.mainMenu;
+            this.MaximizeBox = false;
             this.Name = "Main";
             this.Text = "Valorant Background Changer";
+            this.Closing += new System.ComponentModel.CancelEventHandler(this.Main_Closing);
             this.Load += new System.EventHandler(this.Main_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.currentVideoWMP)).EndInit();
+            this.Resize += new System.EventHandler(this.Main_Resize);
             this.mainMenu.ResumeLayout(false);
             this.mainMenu.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.currentVideoWMP)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -189,13 +179,9 @@
         private System.Windows.Forms.Button fileExplorerBtn;
         private System.Windows.Forms.Button saveBtn;
         private System.Windows.Forms.MenuStrip mainMenu;
-        private System.Windows.Forms.ToolStripMenuItem sSsettingsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem dISCLAIMERToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem2;
-        private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem3;
         private System.Windows.Forms.Button restoreBtn;
+        private System.Windows.Forms.NotifyIcon notifyIcon;
     }
 }
 

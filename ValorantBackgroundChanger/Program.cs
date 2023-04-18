@@ -9,7 +9,7 @@ namespace ValorantBackgroundChanger
 {
     internal static class Program
     {
-        private static Settings settings = new Settings();
+        private static readonly Settings settings = new Settings();
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -26,7 +26,12 @@ namespace ValorantBackgroundChanger
             }
             else
             {
-                Application.Run(new Main(settings));
+                Main main = new Main(settings);
+                if (settings.StartMinimized)
+                {
+                    main.WindowState = FormWindowState.Minimized;
+                }
+                Application.Run(main);
             }
         }
 
