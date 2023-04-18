@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
+using System.Security;
 using System.Threading;
 
 namespace ValorantBackgroundChanger
@@ -36,7 +38,11 @@ namespace ValorantBackgroundChanger
             while (true)
             {
                 setSettings();
-                ReplaceBackground();
+                bool isBackgroundChanged = checkIfBackgroundChanged();
+                if (!isBackgroundChanged)
+                {
+                    ReplaceBackground();
+                }
                 Thread.Sleep(5000);
             }
         }
@@ -85,6 +91,35 @@ namespace ValorantBackgroundChanger
                 }
             }
             return false;
+        }
+
+        private bool checkIfBackgroundChanged()
+        {
+            if (string.IsNullOrEmpty(valoPath) || string.IsNullOrEmpty(videoPath))
+            {
+                return false;
+            }
+            FileInfo videoFileInfo = new FileInfo(videoPath);
+            int videoFileSize = (int)videoFileInfo.Length;
+            int valoVideoFileSize = 0;
+            try
+            {
+                string[] files = Directory.GetFiles(valoPath);
+                foreach (string file in files)
+                {
+                    if (file.Contains("HomepageEp"))
+                    {
+                        FileInfo valoVideoFileInfo = new FileInfo(file);
+                        valoVideoFileSize = (int)valoVideoFileInfo.Length;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                Thread.Sleep(100);
+                checkIfBackgroundChanged();
+            }
+            return (videoFileSize == valoVideoFileSize);
         }
     }
 }
