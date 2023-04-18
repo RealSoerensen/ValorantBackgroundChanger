@@ -6,7 +6,7 @@ Background changer for Valorant. It changes the background of the main menu.
 
 ![Menu](https://github.com/RealSoerensen/ValorantBackgroundChanger/blob/master/Images/Menu.png)
 
-![Settings](https://github.com/RealSoerensen/ValorantBackgroundChanger/blob/master/Images/Settingss.png)
+![Settings](https://github.com/RealSoerensen/ValorantBackgroundChanger/blob/master/Images/Settings.png)
 
 ## How to use
 
